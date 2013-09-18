@@ -82,11 +82,13 @@ Specify image size (if big image not proportional to small image):
 						(($(this).attr('id') != undefined)? '-'+$(this).attr('id') : '')); 
 
 				num_resizable_images++;
-			} else 
-					if ($(this).attr('id') == undefined) {
-						$(this).attr('id', 'single_visor_'+num_single_images);
-						num_single_images++;
-					}
+			} else {
+				$(this)
+					.attr('id',
+						'single_visor_'+num_single_images+
+						(($(this).attr('id') != undefined)? '-'+$(this).attr('id') : ''));
+				num_single_images++;
+			}
 
 			//Bind Cavisor to click event
 			$(this).click(function() {
