@@ -2,7 +2,8 @@
 
 CAvisor - jQuery plugin
 
-CAvisor is small javascript library used to overlay images on top of the current page. It's a snap to setup and works on all modern browsers.
+CAvisor is small javascript library used to overlay images on top of 
+the current page. It's a snap to setup and works on all modern browsers.
 
 ///Author: Carlos Asín
 ///Demo page: 
@@ -231,7 +232,7 @@ Specify image size (if big image not proportional to small image):
 
 						if (show_arrows) {
 
-							if (number >= 1) { 
+						  if (number >= 1) { 
 								
 								//Update or append left arrow
 								if (!$('#visor_prev').length) {
