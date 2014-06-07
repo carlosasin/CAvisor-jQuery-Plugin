@@ -168,10 +168,15 @@ Specify image size (if big image not proportional to small image):
 
           function update_visor() {
 
+            proportion_visor(); // Force recalculate window dimmensions
+
             var border_bottom = ((!show_controls)? 10 : 30);
 
             //Update images
             $('#visor_content').fadeOut(200, function() {
+
+                $('#visor_number, #visor_close, #visor_title, #visor_goto, ' +
+                   '#visor_controls_bottom, #visor_prev, #visor_next').fadeOut(20);
 
                 $('#visor_border').
                     animate({
@@ -217,8 +222,7 @@ Specify image size (if big image not proportional to small image):
                                 'margin-top':
                                     (($(window).height()-height-30-border_bottom)/2)+height+30,
                                 'margin-left':
-                                    (($(window).width()-width-20-2)/2)+10})
-                                .show();
+                                    (($(window).width()-width-20-2)/2)+10});
                         } else $('#visor_controls_bottom').remove();
 
                         //Adjust and show top controls
@@ -226,8 +230,7 @@ Specify image size (if big image not proportional to small image):
                             'margin-top':
                                 (($(window).height()-height-30-border_bottom-2)/2),
                             'margin-left':
-                                (($(window).width()-width-20-2)/2)+10})
-                            .show();
+                                (($(window).width()-width-20-2)/2)+10});
 
                         //Adjust position close bottom
                         $('#visor_close')
@@ -281,20 +284,27 @@ Specify image size (if big image not proportional to small image):
                                         return false;
                                     });
                                 }
+
                                 $('#visor_next')
                                     .css({'margin-left':(width-28),
                                         'margin-top':(((height+2)/2)-23.5+30)});
+
                                 $('#visor_next').attr('class', 'visor_'+(number+1));
                             }
                             else {
+
                                 $('#visor_next').remove();
                                 $('#visor_next').unbind('click');
                             }
                         }
                         else $('#visor_prev, #visor_next').remove();
+
+
+                        $('#visor_number, #visor_close, #visor_title, #visor_goto,' +
+                          '#visor_prev, #visor_next, #visor_controls_bottom').fadeIn(20);
                     });
                 $('#visor_content').height(height).width(width).
-                    html('<img src="'+path+'" width="'+width+'" height="'+height+'" />').fadeIn(200);
+                    html('<img src="'+path+'" width="'+width+'" height="'+height+'" />').fadeIn(300);
                 });
           }
 
@@ -495,7 +505,18 @@ Specify image size (if big image not proportional to small image):
           element_src.substr(0, element_src.length-9)+'big.'+
             element_src.split('.').pop();
 
-          visor_image(path, width, height, true, number,$(this));
+        visor_image(path, width, height, true, number,$(this));
+
+        var resizeTimer;
+        $(window).resize(function() {
+            clearTimeout(resizeTimer);
+            if ($('#visor_content').length) {
+                if ($('#visor_prev').length || $('visor_next').length) {
+                    resizeTimer = setTimeout(function() {$('img[id^=visor_'+number+']').trigger('click')}, 200);
+                } else
+                    resizeTimer = setTimeout(function() {$('img[id^=single_visor_'+number+']').trigger('click')}, 200);
+            }
+        });
 
         return false;
       });
