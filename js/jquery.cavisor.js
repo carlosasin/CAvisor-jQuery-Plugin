@@ -100,6 +100,7 @@ Specify image size (if big image not proportional to small image):
             $('body').css('overflow','visible');  //Restore Scroll
             $('#visor').remove();                 //Remove Visor
             $(document).unbind("keyup");          //Unbind keyboard events
+            $(window).unbind("resize").unbind("orientationChanged"); //Unbind resize events
           }
 
           function animate_visor() {
@@ -421,6 +422,20 @@ Specify image size (if big image not proportional to small image):
               }
             });
 
+            //Handler window resize and orientationChanged
+              var resized;
+              $(window).on('resize orientationChanged', function(){
+                  clearTimeout(resized);
+                  resized =
+                      setTimeout(function() {
+                          if ($('#visor_content').length) {
+                            if ($('#visor_prev').length || $('#visor_next').length) {
+                                $('img[id^=visor_'+number+']').trigger('click');
+                            } else $('img[id^=single_visor_'+number+']').trigger('click');
+                          }
+                      },400);
+              });
+
             animate_visor();
           }
 
@@ -506,17 +521,6 @@ Specify image size (if big image not proportional to small image):
             element_src.split('.').pop();
 
         visor_image(path, width, height, true, number,$(this));
-
-        var resizeTimer;
-        $(window).resize(function() {
-            clearTimeout(resizeTimer);
-            if ($('#visor_content').length) {
-                if ($('#visor_prev').length || $('visor_next').length) {
-                    resizeTimer = setTimeout(function() {$('img[id^=visor_'+number+']').trigger('click')}, 200);
-                } else
-                    resizeTimer = setTimeout(function() {$('img[id^=single_visor_'+number+']').trigger('click')}, 200);
-            }
-        });
 
         return false;
       });
