@@ -2,18 +2,18 @@
 
 CAvisor - jQuery plugin
 
-CAvisor is small javascript library used to overlay images on top of 
+CAvisor is small javascript library used to overlay images on top of
 the current page. It's a snap to setup and works on all modern browsers.
 
 ///Author: Carlos Asín
-///Demo page: 
+///Demo page:
   https://googledrive.com/host/0BwzDh0DsxCXlS3g5TF9kS1BDWHM/cavisor-demo/
 
 ///How to install:
 
 - Load js libreray after jQuery
 - Load css
-- Add at the end of body 
+- Add at the end of body
   <script type="text/javascript">
     $().cavisor();
   </script>
@@ -58,7 +58,7 @@ Specify image size (if big image not proportional to small image):
   $.fn.cavisor = function (options) {
 
     // Default settings
-    var settings = 
+    var settings =
       $.extend({
         number: true,     //Show top counter
         title: true,      //Show slide title
@@ -80,7 +80,7 @@ Specify image size (if big image not proportional to small image):
         $(this)
           .attr('id',
             'visor_'+num_resizable_images+
-            (($(this).attr('id') != undefined)? '-'+$(this).attr('id') : '')); 
+            (($(this).attr('id') != undefined)? '-'+$(this).attr('id') : ''));
 
         num_resizable_images++;
       } else {
@@ -100,6 +100,7 @@ Specify image size (if big image not proportional to small image):
             $('body').css('overflow','visible');  //Restore Scroll
             $('#visor').remove();                 //Remove Visor
             $(document).unbind("keyup");          //Unbind keyboard events
+            $(window).unbind("resize").unbind("orientationChanged"); //Unbind resize events
           }
 
           function animate_visor() {
@@ -112,14 +113,14 @@ Specify image size (if big image not proportional to small image):
                   (($(window).height()-height-30-border_bottom-2)/2),
                 'height': (height+30+border_bottom+2),
                 'width': (width+2)}
-                , '', '', 
-                function() { 
+                , '', '',
+                function() {
 
                   //Adjust and show top controls
                   $('#visor_controls_top').css({
                     'margin-top':
                     (($(window).height()-height-30-border_bottom-2)/2),
-                    'margin-left': 
+                    'margin-left':
                     (($(window).width()-width-20-2)/2)+10})
                       .show();
 
@@ -132,7 +133,7 @@ Specify image size (if big image not proportional to small image):
                     $('#visor_controls_bottom').css({
                       'margin-top':
                       (($(window).height()-height-30-border_bottom)/2)+height+30,
-                      'margin-left': 
+                      'margin-left':
                       (($(window).width()-width-20-2)/2)+10})
                         .show();
                 });
@@ -145,7 +146,7 @@ Specify image size (if big image not proportional to small image):
                   'height="'+height+'" class="visor_image" />')
                 .fadeIn(1500);
 
-            //Show movement controls    
+            //Show movement controls
             if (show_arrows) $('#visor_next, #visor_prev').show();
           }
 
@@ -155,8 +156,8 @@ Specify image size (if big image not proportional to small image):
               var height_tmp = $(window).height()-100;
               var width_tmp = (height_tmp*width)/height;
             }
-            
-            if (width > $(window).width()-100 && 
+
+            if (width > $(window).width()-100 &&
               width_tmp > $(window).width()-100) {
               var width_tmp = $(window).width()-100;
               var height_tmp = (height*width_tmp)/width;
@@ -168,132 +169,144 @@ Specify image size (if big image not proportional to small image):
 
           function update_visor() {
 
+            proportion_visor(); // Force recalculate window dimmensions
+
             var border_bottom = ((!show_controls)? 10 : 30);
 
-            $('#visor_border').
-              animate({
-                'margin-top':
-                  (($(window).height()-height-30-border_bottom-2)/2),
-                'margin-left':
-                  (($(window).width()-width-20-2)/2),
-                'height': (height+30+border_bottom+2),
-                'width': (width+2)}, 100);
+            //Update images
+            $('#visor_content').fadeOut(200, function() {
 
-            //Actual number and counter
-            if (show_number) {
-              if($('#visor_number').length)
-                $('#visor_number')
-                  .html((number+1)+' / '+(num_resizable_images));
-              else
-                $('<span id="visor_number">'+(number+1)+' / '+
-                  (num_resizable_images)+'</span>').insertAfter('#visor_close');
-            } else $('#visor_number').remove();
+                $('#visor_number, #visor_close, #visor_title, #visor_goto, ' +
+                   '#visor_controls_bottom, #visor_prev, #visor_next').fadeOut(20);
 
-            //Title
-            if (element.attr('title') != undefined && show_title)
-              if ($('#visor_title').length)
-                $('#visor_title').html(element.attr('title')).width(width);
-              else 
-                $('#visor_controls_top')
-                  .append('<p id="visor_title">'+element.attr("title")+'</p>');
-            else $('#visor_title').empty();
+                $('#visor_border').
+                    animate({
+                        'margin-top':
+                            (($(window).height()-height-30-border_bottom-2)/2),
+                        'margin-left':
+                            (($(window).width()-width-20-2)/2),
+                        'height': (height+30+border_bottom+2),
+                        'width': (width+2)}, 100,'',function() {
 
-            //Adjust and show bottom controls
-            if (show_controls) {
-              if ($('#visor_goto').length) 
-                $('#visor_goto').attr('href', '#'+element.attr("id"));
-              else 
-                $('#visor')
-                  .append(
-                    '<div id="visor_controls_bottom">'+
-                      '<a id="visor_goto" href="#'+element.attr("id")+'">'+
-                        'Go to image in the document'+
-                      '</a>'+
-                    '</div>');
-              $('#visor_controls_bottom').css({
-                'margin-top':
-                (($(window).height()-height-30-border_bottom)/2)+height+30,
-                'margin-left': 
-                (($(window).width()-width-20-2)/2)+10})
-                  .show();
-            } else $('#visor_controls_bottom').remove();
+                        //Actual number and counter
+                        if (show_number) {
+                            if($('#visor_number').length)
+                                $('#visor_number')
+                                    .html((number+1)+' / '+(num_resizable_images));
+                            else
+                                $('<span id="visor_number">'+(number+1)+' / '+
+                                    (num_resizable_images)+'</span>').insertAfter('#visor_close');
+                        } else $('#visor_number').remove();
 
-            //Adjust and show top controls
-            $('#visor_controls_top').css({
-              'margin-top':
-              (($(window).height()-height-30-border_bottom-2)/2),
-              'margin-left': 
-              (($(window).width()-width-20-2)/2)+10})
-                .show();
+                        //Title
+                        if (element.attr('title') != undefined && show_title)
+                            if ($('#visor_title').length)
+                                $('#visor_title').html(element.attr('title')).width(width);
+                            else
+                                $('#visor_controls_top')
+                                    .append('<p id="visor_title">'+element.attr("title")+'</p>');
+                        else $('#visor_title').empty();
 
-            //Adjust position close bottom
-            $('#visor_close')
-              .css({'margin-left': width+2-15});
+                        //Adjust and show bottom controls
+                        if (show_controls) {
+                            if ($('#visor_goto').length)
+                                $('#visor_goto').attr('href', '#'+element.attr("id"));
+                            else
+                                $('#visor')
+                                    .append(
+                                        '<div id="visor_controls_bottom">'+
+                                            '<a id="visor_goto" href="#'+element.attr("id")+'">'+
+                                            'Go to image in the document'+
+                                            '</a>'+
+                                            '</div>');
+                            $('#visor_controls_bottom').css({
+                                'margin-top':
+                                    (($(window).height()-height-30-border_bottom)/2)+height+30,
+                                'margin-left':
+                                    (($(window).width()-width-20-2)/2)+10});
+                        } else $('#visor_controls_bottom').remove();
 
-            if (show_arrows) {
+                        //Adjust and show top controls
+                        $('#visor_controls_top').css({
+                            'margin-top':
+                                (($(window).height()-height-30-border_bottom-2)/2),
+                            'margin-left':
+                                (($(window).width()-width-20-2)/2)+10});
 
-              if (number >= 1) { 
-                
-                //Update or append left arrow
-                if (!$('#visor_prev').length) {
+                        //Adjust position close bottom
+                        $('#visor_close')
+                            .css({'margin-left': width+2-15});
 
-                  $('#visor_border')
-                    .prepend(
-                      '<div id="visor_prev" class="visor_'+(number-1)+'">'+
-                        '<span></span>'+
-                      '</div>');
-                  
-                  $('#visor_prev').click(function() { 
-                    if ($('#'+$(this).attr('class')).length > 0)
-                      $('#'+$(this).attr('class')).trigger('click');
-                    else
-                      $('img[id^='+$(this).attr('class')+'-]').trigger('click'); 
-                    return false;
-                  });
-                }
-                $('#visor_prev').css({'margin-top':(((height+2)/2)-23.5+30)}); 
-                $('#visor_prev').attr('class', 'visor_'+(number-1)); 
-              }
-              else {
-                $('#visor_prev').remove();
-                $('#visor_prev').unbind('click');
-              }
+                        if (show_arrows) {
 
-              //Update or append right arrow
-              if (number < num_resizable_images-1) { 
-              
-                if (!$('#visor_next').length) {
+                            if (number >= 1) {
 
-                  $('#visor_content')
-                    .before(
-                      '<div id="visor_next" class="visor_'+(number+1)+'">'+
-                        '<span></span>'+
-                      '</div>');
-                  
-                  $('#visor_next').click(function() { 
-                    if ($('#'+$(this).attr('class')).length > 0)
-                      $('#'+$(this).attr('class')).trigger('click');
-                    else
-                      $('img[id^="'+$(this).attr('class')+'-"]').trigger('click'); 
-                    return false;
-                  });
-                }
-                $('#visor_next')
-                  .css({'margin-left':(width-28),
-                        'margin-top':(((height+2)/2)-23.5+30)}); 
-                $('#visor_next').attr('class', 'visor_'+(number+1)); 
-              }
-              else {
-                $('#visor_next').remove();
-                $('#visor_next').unbind('click');
-              }
-            }
-            else $('#visor_prev, #visor_next').remove();
+                                //Update or append left arrow
+                                if (!$('#visor_prev').length) {
 
-            //Update image
-            $('#visor_content').height(height).width(width).
-              html('<img src="'+path+'" width="'+width+'" height="'+height+'" />')
-                .fadeIn(1500);  
+                                    $('#visor_border')
+                                        .prepend(
+                                            '<div id="visor_prev" class="visor_'+(number-1)+'">'+
+                                                '<span></span>'+
+                                                '</div>');
+
+                                    $('#visor_prev').click(function() {
+                                        if ($('#'+$(this).attr('class')).length > 0)
+                                            $('#'+$(this).attr('class')).trigger('click');
+                                        else
+                                            $('img[id^='+$(this).attr('class')+'-]').trigger('click');
+                                        return false;
+                                    });
+                                }
+                                $('#visor_prev').css({'margin-top':(((height+2)/2)-23.5+30)});
+                                $('#visor_prev').attr('class', 'visor_'+(number-1));
+                            }
+                            else {
+                                $('#visor_prev').remove();
+                                $('#visor_prev').unbind('click');
+                            }
+
+                            //Update or append right arrow
+                            if (number < num_resizable_images-1) {
+
+                                if (!$('#visor_next').length) {
+
+                                    $('#visor_content')
+                                        .before(
+                                            '<div id="visor_next" class="visor_'+(number+1)+'">'+
+                                                '<span></span>'+
+                                                '</div>');
+
+                                    $('#visor_next').click(function() {
+                                        if ($('#'+$(this).attr('class')).length > 0)
+                                            $('#'+$(this).attr('class')).trigger('click');
+                                        else
+                                            $('img[id^="'+$(this).attr('class')+'-"]').trigger('click');
+                                        return false;
+                                    });
+                                }
+
+                                $('#visor_next')
+                                    .css({'margin-left':(width-28),
+                                        'margin-top':(((height+2)/2)-23.5+30)});
+
+                                $('#visor_next').attr('class', 'visor_'+(number+1));
+                            }
+                            else {
+
+                                $('#visor_next').remove();
+                                $('#visor_next').unbind('click');
+                            }
+                        }
+                        else $('#visor_prev, #visor_next').remove();
+
+
+                        $('#visor_number, #visor_close, #visor_title, #visor_goto,' +
+                          '#visor_prev, #visor_next, #visor_controls_bottom').fadeIn(20);
+                    });
+                $('#visor_content').height(height).width(width).
+                    html('<img src="'+path+'" width="'+width+'" height="'+height+'" />').fadeIn(300);
+                });
           }
 
           function draw_visor() {
@@ -313,12 +326,12 @@ Specify image size (if big image not proportional to small image):
                     '<span id="visor_close">&#10005;</span>'+ //Close button
 
                     //Actual number and counter
-                    ((show_number)? 
+                    ((show_number)?
                       '<span id="visor_number">'+(number+1)+' / '+
                       (num_resizable_images)+'</span>' : '')+
 
                     //Title
-                    ((show_title && element.attr("title") != undefined)? 
+                    ((show_title && element.attr("title") != undefined)?
                       '<p id="visor_title">'+element.attr("title")+'</p>':'')+
 
                   '</div>'+
@@ -329,12 +342,12 @@ Specify image size (if big image not proportional to small image):
                     ((show_arrows)?
 
                       //Go to previous control
-                      ((number >= 1)? 
+                      ((number >= 1)?
                         '<div id="visor_prev" class="visor_'+(number-1)+'">'+
                         '</div>' : '')+
 
                       //Go to next control
-                      ((number < num_resizable_images-1)? 
+                      ((number < num_resizable_images-1)?
                         '<div id="visor_next" class="visor_'+(number+1)+'">'+
                         '</div>' : '') : '')+
 
@@ -344,7 +357,7 @@ Specify image size (if big image not proportional to small image):
                   '</div>'+
 
                   //Bottom controls
-                  ((show_controls)? 
+                  ((show_controls)?
                     '<div id="visor_controls_bottom">'+
                       '<a id="visor_goto" href="#'+element.attr("id")+'">'+
                         'Go to image in the document'+
@@ -370,13 +383,13 @@ Specify image size (if big image not proportional to small image):
             $("#visor_controls_top, #visor_controls_bottom")
               .width(width+2).hide();
 
-            //Adjust top left visor border 
+            //Adjust top left visor border
             $('#visor_border').width(width+20)
               .css(
                 {'margin-top':
-                  (($(window).height()-$('#visor_border').height())/2), 
+                  (($(window).height()-$('#visor_border').height())/2),
                  'margin-left':
-                  (($(window).width()-width-20-2)/2)}); 
+                  (($(window).width()-width-20-2)/2)});
 
             /////// Handle controls
 
@@ -385,7 +398,7 @@ Specify image size (if big image not proportional to small image):
               if ($('#'+$(this).attr('class')).length > 0)
                 $('#'+$(this).attr('class')).trigger('click');
               else
-                $('img[id^="'+$(this).attr('class')+'-"]').trigger('click'); 
+                $('img[id^="'+$(this).attr('class')+'-"]').trigger('click');
               return false;
             });
 
@@ -397,24 +410,38 @@ Specify image size (if big image not proportional to small image):
                     $('#'+$('#visor_prev').attr('class')).trigger('click');
                   else
                     $('img[id^="'+$('#visor_prev').attr('class')+'-"]')
-                      .trigger('click'); 
+                      .trigger('click');
                   break;
                 case 39: //Right -> visor_next
                   if ($('#'+$('#visor_next').attr('class')).length > 0)
                     $('#'+$('#visor_next').attr('class')).trigger('click');
                   else
                     $('img[id^="'+$('#visor_next').attr('class')+'-"]')
-                      .trigger('click'); 
+                      .trigger('click');
                   break;
               }
             });
+
+            //Handler window resize and orientationChanged
+              var resized;
+              $(window).on('resize orientationChanged', function(){
+                  clearTimeout(resized);
+                  resized =
+                      setTimeout(function() {
+                          if ($('#visor_content').length) {
+                            if ($('#visor_prev').length || $('#visor_next').length) {
+                                $('img[id^=visor_'+number+']').trigger('click');
+                            } else $('img[id^=single_visor_'+number+']').trigger('click');
+                          }
+                      },400);
+              });
 
             animate_visor();
           }
 
           if ($(window).height() > 250 && $(window).width() > 250) {
 
-            proportion_visor(); //if image bigger then window, 
+            proportion_visor(); //if image bigger then window,
                                 //calculate proportion
             if (!$('#visor').length) draw_visor();
             else update_visor();
@@ -428,53 +455,53 @@ Specify image size (if big image not proportional to small image):
             $('#visor_goto').click(function() { close_visor(); });
 
             //Press "esc" key
-            $(document).keyup(function(e) { 
-              if (e.keyCode == 27 || e.keyCode == 18 || 
-                  e.keyCode == 69 || e.keyCode == 16 || e.keyCode == 81) 
-                close_visor(); 
+            $(document).keyup(function(e) {
+              if (e.keyCode == 27 || e.keyCode == 18 ||
+                  e.keyCode == 69 || e.keyCode == 16 || e.keyCode == 81)
+                close_visor();
             });
           }
-          else 
+          else
             console.log('CAVISOR ERROR: resolution less than 250x250px');
         }
 
         //Compatibility fix Lazy Load
-        var element_src = 
-          ($(this).attr('data-original') != undefined)? 
+        var element_src =
+          ($(this).attr('data-original') != undefined)?
             $(this).attr('data-original') : $(this).attr('src');
 
         ///Handle custom options
 
         //Get specific size parameters
-        var element_width = 
-          parseInt(($(this).attr('width') != undefined)? 
+        var element_width =
+          parseInt(($(this).attr('width') != undefined)?
             $(this).attr('width') : $(this).width());
-        var element_height = 
-          parseInt(($(this).attr('height') != undefined)? 
+        var element_height =
+          parseInt(($(this).attr('height') != undefined)?
             $(this).attr('height') : $(this).height());
 
-        var show_controls = 
+        var show_controls =
           (!$(this).hasClass('no-controls'))? settings.controls : false;
 
-        var show_title = 
+        var show_title =
           (!$(this).hasClass('no-title'))? settings.title : false;
 
         var show_number =
-          (!$(this).hasClass('no-number') && 
+          (!$(this).hasClass('no-number') &&
            !$(this).hasClass('single-image'))? settings.number : false;
 
         var show_arrows =
            (!$(this).hasClass('single-image'))? settings.arrows : false;
 
         //Get image parameters
-        var parameters = 
-          ($(this).attr('id') != undefined)? 
+        var parameters =
+          ($(this).attr('id') != undefined)?
             $(this).attr('id').split('-') : '';
 
         if (parameters.length > 1) {
 
           var width = parseInt(parameters[1].match(/[\d]+$/));
-          var height = 
+          var height =
             (parameters.length > 2)? parseInt(parameters[2].match(/[\d]+$/)) :
             ((element_height*width)/element_width);
         }
@@ -485,15 +512,15 @@ Specify image size (if big image not proportional to small image):
         }
 
         //Get image number
-        var number = 
-          (!$(this).hasClass('single-image'))? 
+        var number =
+          (!$(this).hasClass('single-image'))?
             parseInt(parameters[0].match(/[\d]+$/)) : 0;
 
-        var path = ($(this).hasClass('same-image'))? element_src : 
+        var path = ($(this).hasClass('same-image'))? element_src :
           element_src.substr(0, element_src.length-9)+'big.'+
             element_src.split('.').pop();
 
-          visor_image(path, width, height, true, number,$(this));
+        visor_image(path, width, height, true, number,$(this));
 
         return false;
       });
