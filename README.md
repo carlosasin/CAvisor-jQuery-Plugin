@@ -42,10 +42,10 @@ Carlos Asín
 - `single-image` -> hide movement controls and overlay it alone
 - `no-number` -> hide counter and current number
 - `no-title` -> hide image title
-- `no-controls -> hide bottom controls
+- `no-controls` -> hide bottom controls
 
 ### Specify image size (if big image not proportional to small image):
-- id="width_xxx-height_xxx"
+- `id="width_xxx-height_xxx"`
 
 ## Additional info:
 
