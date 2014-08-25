@@ -5,11 +5,11 @@ CAvisor - jQuery plugin
 CAvisor is small javascript library used to overlay images on top of
 the current page. It's a snap to setup and works on all modern browsers.
 
-///Author: Carlos Asín
-///Demo page:
+// Author: Carlos Asín
+// Demo page:
   https://googledrive.com/host/0BwzDh0DsxCXlS3g5TF9kS1BDWHM/cavisor-demo/
 
-///How to install:
+// How to install:
 
 - Load js libreray after jQuery
 - Load css
@@ -18,7 +18,7 @@ the current page. It's a snap to setup and works on all modern browsers.
     $().cavisor();
   </script>
 
-////How to use:
+// How to use:
 
 Basic use:
 - Name the images as:
@@ -43,11 +43,11 @@ Clases (individual image options):
 Specify image size (if big image not proportional to small image):
 - id="width_xxx-height_xxx"
 
-////Additional info:
+// Additional info:
 
 - Compatible with Lazyload
 
-////To-Do:
+// To-Do:
 
 - Adjust title size if bigger than visor
 
@@ -80,14 +80,14 @@ Specify image size (if big image not proportional to small image):
         $(this)
           .attr('id',
             'visor_'+num_resizable_images+
-            (($(this).attr('id') != undefined)? '-'+$(this).attr('id') : ''));
+            (($(this).attr('id') !== undefined)? '-'+$(this).attr('id') : ''));
 
         num_resizable_images++;
       } else {
         $(this)
           .attr('id',
             'single_visor_'+num_single_images+
-            (($(this).attr('id') != undefined)? '-'+$(this).attr('id') : ''));
+            (($(this).attr('id') !== undefined)? '-'+$(this).attr('id') : ''));
         num_single_images++;
       }
 
@@ -129,13 +129,14 @@ Specify image size (if big image not proportional to small image):
                     .css({'margin-left': width+2-15});
 
                   //Adjust and show bottom controls
-                  if (show_controls)
+                  if (show_controls) {
                     $('#visor_controls_bottom').css({
                       'margin-top':
                       (($(window).height()-height-30-border_bottom)/2)+height+30,
                       'margin-left':
                       (($(window).width()-width-20-2)/2)+10})
                         .show();
+                  }
                 });
 
             //Insert image on visor
@@ -147,7 +148,9 @@ Specify image size (if big image not proportional to small image):
                 .fadeIn(1500);
 
             //Show movement controls
-            if (show_arrows) $('#visor_next, #visor_prev').show();
+            if (show_arrows) {
+                $('#visor_next, #visor_prev').show();
+            }
           }
 
           function proportion_visor() {
@@ -163,8 +166,8 @@ Specify image size (if big image not proportional to small image):
               var height_tmp = (height*width_tmp)/width;
             }
 
-            if (width_tmp != null) width = width_tmp;
-            if (height_tmp != null) height = height_tmp;
+            if (width_tmp !== null) width = width_tmp;
+            if (height_tmp !== null) height = height_tmp;
           }
 
           function update_visor() {
@@ -190,28 +193,36 @@ Specify image size (if big image not proportional to small image):
 
                         //Actual number and counter
                         if (show_number) {
-                            if($('#visor_number').length)
+                            if($('#visor_number').length) {
                                 $('#visor_number')
                                     .html((number+1)+' / '+(num_resizable_images));
-                            else
+                            }
+                            else {
                                 $('<span id="visor_number">'+(number+1)+' / '+
                                     (num_resizable_images)+'</span>').insertAfter('#visor_close');
+                            }
                         } else $('#visor_number').remove();
 
                         //Title
-                        if (element.attr('title') != undefined && show_title)
-                            if ($('#visor_title').length)
+                        if (element.attr('title') !== undefined && show_title) {
+                            if ($('#visor_title').length) {
                                 $('#visor_title').html(element.attr('title')).width(width);
-                            else
+                            }
+                            else {
                                 $('#visor_controls_top')
                                     .append('<p id="visor_title">'+element.attr("title")+'</p>');
-                        else $('#visor_title').empty();
+                            }
+                        }
+                        else {
+                            $('#visor_title').empty();
+                        }
 
                         //Adjust and show bottom controls
                         if (show_controls) {
-                            if ($('#visor_goto').length)
+                            if ($('#visor_goto').length) {
                                 $('#visor_goto').attr('href', '#'+element.attr("id"));
-                            else
+                            }
+                            else {
                                 $('#visor')
                                     .append(
                                         '<div id="visor_controls_bottom">'+
@@ -219,12 +230,16 @@ Specify image size (if big image not proportional to small image):
                                             'Go to image in the document'+
                                             '</a>'+
                                             '</div>');
+                            }
+
                             $('#visor_controls_bottom').css({
                                 'margin-top':
                                     (($(window).height()-height-30-border_bottom)/2)+height+30,
                                 'margin-left':
                                     (($(window).width()-width-20-2)/2)+10});
-                        } else $('#visor_controls_bottom').remove();
+                        } else {
+                            $('#visor_controls_bottom').remove();
+                        }
 
                         //Adjust and show top controls
                         $('#visor_controls_top').css({
@@ -251,10 +266,12 @@ Specify image size (if big image not proportional to small image):
                                                 '</div>');
 
                                     $('#visor_prev').click(function() {
-                                        if ($('#'+$(this).attr('class')).length > 0)
+                                        if ($('#'+$(this).attr('class')).length > 0) {
                                             $('#'+$(this).attr('class')).trigger('click');
-                                        else
+                                        }
+                                        else {
                                             $('img[id^='+$(this).attr('class')+'-]').trigger('click');
+                                        }
                                         return false;
                                     });
                                 }
@@ -278,10 +295,12 @@ Specify image size (if big image not proportional to small image):
                                                 '</div>');
 
                                     $('#visor_next').click(function() {
-                                        if ($('#'+$(this).attr('class')).length > 0)
+                                        if ($('#'+$(this).attr('class')).length > 0) {
                                             $('#'+$(this).attr('class')).trigger('click');
-                                        else
+                                        }
+                                        else {
                                             $('img[id^="'+$(this).attr('class')+'-"]').trigger('click');
+                                        }
                                         return false;
                                     });
                                 }
@@ -331,7 +350,7 @@ Specify image size (if big image not proportional to small image):
                       (num_resizable_images)+'</span>' : '')+
 
                     //Title
-                    ((show_title && element.attr("title") != undefined)?
+                    ((show_title && element.attr("title") !== undefined)?
                       '<p id="visor_title">'+element.attr("title")+'</p>':'')+
 
                   '</div>'+
@@ -431,7 +450,9 @@ Specify image size (if big image not proportional to small image):
                           if ($('#visor_content').length) {
                             if ($('#visor_prev').length || $('#visor_next').length) {
                                 $('img[id^=visor_'+number+']').trigger('click');
-                            } else $('img[id^=single_visor_'+number+']').trigger('click');
+                            } else {
+                                $('img[id^=single_visor_'+number+']').trigger('click');
+                            }
                           }
                       },400);
               });
@@ -443,21 +464,30 @@ Specify image size (if big image not proportional to small image):
 
             proportion_visor(); //if image bigger then window,
                                 //calculate proportion
-            if (!$('#visor').length) draw_visor();
-            else update_visor();
+            if (!$('#visor').length) {
+                draw_visor();
+            }
+            else {
+                update_visor();
+            }
 
             /// Handle close visor events
 
             //Close Button
-            $('#visor_close').click(function() { close_visor(); return false });
+            $('#visor_close').click(function() {
+                close_visor();
+                return false
+            });
 
             //Go to button
-            $('#visor_goto').click(function() { close_visor(); });
+            $('#visor_goto').click(function() {
+                close_visor();
+            });
 
             //Press "esc" key
             $(document).keyup(function(e) {
-              if (e.keyCode == 27 || e.keyCode == 18 ||
-                  e.keyCode == 69 || e.keyCode == 16 || e.keyCode == 81)
+              if (e.keyCode === 27 || e.keyCode === 18 ||
+                  e.keyCode === 69 || e.keyCode === 16 || e.keyCode === 81)
                 close_visor();
             });
           }
@@ -467,17 +497,17 @@ Specify image size (if big image not proportional to small image):
 
         //Compatibility fix Lazy Load
         var element_src =
-          ($(this).attr('data-original') != undefined)?
+          ($(this).attr('data-original') !== undefined)?
             $(this).attr('data-original') : $(this).attr('src');
 
         ///Handle custom options
 
         //Get specific size parameters
         var element_width =
-          parseInt(($(this).attr('width') != undefined)?
+          parseInt(($(this).attr('width') !== undefined)?
             $(this).attr('width') : $(this).width());
         var element_height =
-          parseInt(($(this).attr('height') != undefined)?
+          parseInt(($(this).attr('height') !== undefined)?
             $(this).attr('height') : $(this).height());
 
         var show_controls =
@@ -495,7 +525,7 @@ Specify image size (if big image not proportional to small image):
 
         //Get image parameters
         var parameters =
-          ($(this).attr('id') != undefined)?
+          ($(this).attr('id') !== undefined)?
             $(this).attr('id').split('-') : '';
 
         if (parameters.length > 1) {
