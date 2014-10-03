@@ -7,7 +7,7 @@ the current page. It's a snap to setup and works on all modern browsers.
 
 ///Author: Carlos Asín
 ///Demo page:
-  https://googledrive.com/host/0BwzDh0DsxCXlS3g5TF9kS1BDWHM/cavisor-demo/
+ http://demos.carlosasin.com/cavisor-demo/
 
 ///How to install:
 
