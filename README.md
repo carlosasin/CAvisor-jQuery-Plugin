@@ -7,7 +7,7 @@ CAvisor is small javascript library used to overlay images on top of the current
 Carlos Asín
 ### Demo page
 
-[https://googledrive.com/host/0BwzDh0DsxCXlS3g5TF9kS1BDWHM/cavisor-demo/](https://googledrive.com/host/0BwzDh0DsxCXlS3g5TF9kS1BDWHM/cavisor-demo/)
+[http://demos.carlosasin.com/cavisor-demo/](http://demos.carlosasin.com/cavisor-demo/)
 	
 
 ## How to install:
